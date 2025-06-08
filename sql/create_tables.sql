@@ -137,3 +137,6 @@ GO
 
 ALTER TABLE [Atendimentos] ADD FOREIGN KEY ([atendente_id]) REFERENCES [Atendentes] ([atendente_id])
 GO
+
+ALTER TABLE Clientes
+ADD CONSTRAINT chk_cpf_length CHECK (LEN(cpf) = 14);
