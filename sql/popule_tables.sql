@@ -1,7 +1,7 @@
 -- Inserir clientes
 INSERT INTO [Clientes] (nome, cpf, email, telefone, data_cadastro)
 VALUES
-('João Silva', '123.456.789-00', 'joao.silva@email.com', '11999990000', '2025/01/05'),
+('JoÃ£o Silva', '123.456.789-00', 'joao.silva@email.com', '11999990000', '2025/01/05'),
 ('Maria Souza', '987.654.321-00', 'maria.souza@email.com', '11999991111', '2025/01/06'),
 ('Pedro Santos', '111.222.333-44', 'pedro.santos@email.com', '11999992222', '2025/01/10'),
 ('Ana Oliveira', '555.666.777-88', 'ana.oliveira@email.com', '11999993333', '2025/01/13'),
@@ -26,7 +26,7 @@ VALUES
 ('Lenovo');
 
 -- Inserir celulares
-INSERT INTO [Celulares] (id_cliente, id_marca, modelo, imei, valor)
+INSERT INTO [Celulares] (cliente_id, marca_id, modelo, imei, valor)
 VALUES
 (1, 1, 'iPhone 13', '111111111111111', 5000.00),
 (2, 2, 'Galaxy S21', '222222222222222', 4500.00),
@@ -42,32 +42,32 @@ VALUES
 -- Inserir planos
 INSERT INTO [Planos] (nome_plano, descricao, valor_mensal)
 VALUES
-('Plano Básico', 'Cobertura básica contra roubo e furto.', 50.00),
+('Plano BÃ¡sico', 'Cobertura bÃ¡sica contra roubo e furto.', 50.00),
 ('Plano Plus', 'Cobertura completa, incluindo danos acidentais.', 80.00),
-('Plano Família', 'Cobertura para múltiplos dispositivos.', 100.00),
+('Plano FamÃ­lia', 'Cobertura para mÃºltiplos dispositivos.', 100.00),
 ('Plano Empresarial', 'Cobertura para empresas.', 150.00),
 ('Plano Estudante', 'Cobertura especial para estudantes.', 40.00),
 ('Plano VIP', 'Cobertura premium com atendimento personalizado.', 200.00),
-('Plano Silver', 'Cobertura intermediária.', 70.00),
-('Plano Gold', 'Cobertura completa com benefícios extras.', 120.00),
+('Plano Silver', 'Cobertura intermediÃ¡ria.', 70.00),
+('Plano Gold', 'Cobertura completa com benefÃ­cios extras.', 120.00),
 ('Plano Black', 'Cobertura total sem limites.', 250.00),
-('Plano Personalizado', 'Cobertura flexível de acordo com suas necessidades.', 180.00);
+('Plano Personalizado', 'Cobertura flexÃ­vel de acordo com suas necessidades.', 180.00);
 
 -- Inserir coberturas
 INSERT INTO [Coberturas] (plano_id, descricao)
 VALUES
 (1, 'Cobertura contra roubo'),
 (2, 'Cobertura completa'),
-(3, 'Cobertura para toda a família'),
+(3, 'Cobertura para toda a famÃ­lia'),
 (4, 'Cobertura para empresas'),
 (5, 'Cobertura estudantil'),
 (6, 'Cobertura VIP'),
 (7, 'Cobertura Silver'),
 (8, 'Cobertura Gold'),
 (9, 'Cobertura Black'),
-(10, 'Cobertura flexível');
+(10, 'Cobertura flexÃ­vel');
 
--- Inserir apólices
+-- Inserir apÃ³lices
 INSERT INTO [Apolices] (cliente_id, celular_id, plano_id)
 VALUES
 (1, 1, 1),
@@ -81,7 +81,7 @@ VALUES
 (9, 9, 9),
 (10, 10, 10);
 
--- Inserir detalhes de apólices
+-- Inserir detalhes de apÃ³lices
 INSERT INTO [Detalhes_Apolices] (apolice_id, data_inicio, data_fim, status)
 VALUES
 (1, '2025/01/05', '2026/01/05', 'Ativa'),
@@ -95,19 +95,19 @@ VALUES
 (9, '2025/01/29', '2026/01/29', 'Ativa'),
 (10, '2025/02/01', '2026/02/01', 'Ativa');
 
--- Inserir métodos de pagamento
+-- Inserir mÃ©todos de pagamento
 INSERT INTO [Metodo_Pagamento] (nome)
 VALUES
-('Cartão de Crédito'),
-('Boleto Bancário'),
+('CartÃ£o de CrÃ©dito'),
+('Boleto BancÃ¡rio'),
 ('Pix'),
-('Transferência'),
-('Débito Automático'),
+('TransferÃªncia'),
+('DÃ©bito AutomÃ¡tico'),
 ('PayPal'),
 ('Dinheiro'),
-('Crédito Loja'),
+('CrÃ©dito Loja'),
 ('Vale Compra'),
-('Crédito Celular');
+('CrÃ©dito Celular');
 
 -- Inserir pagamentos
 INSERT INTO [Pagamentos] (apolice_id, data_pagamento, valor_pago, status, metodo_pagamento_id)
@@ -126,16 +126,16 @@ VALUES
 -- Inserir sinistros
 INSERT INTO [Sinistros] (apolice_id, data_ocorrencia, tipo_ocorrencia, descricao, status)
 VALUES
-(1, '2025/02/01', 'Roubo', 'Roubo em transporte público', 'Aberto'),
+(1, '2025/02/01', 'Roubo', 'Roubo em transporte pÃºblico', 'Aberto'),
 (2, '2025/02/01', 'Furto', 'Furto em shopping', 'Fechado'),
 (3, '2025/02/08', 'Dano Acidental', 'Queda do aparelho', 'Aberto'),
 (4, '2025/02/10', 'Roubo', 'Roubo em casa', 'Fechado'),
 (5, '2025/02/12', 'Perda', 'Perda durante viagem', 'Aberto'),
 (6, '2025/02/18', 'Furto', 'Furto em festa', 'Aberto'),
-(7, '2025/02/18', 'Roubo', 'Roubo em transporte público', 'Fechado'),
+(7, '2025/02/18', 'Roubo', 'Roubo em transporte pÃºblico', 'Fechado'),
 (8, '2025/03/08', 'Dano Acidental', 'Dano na piscina', 'Aberto'),
 (9, '2025/3/12', 'Furto', 'Furto em evento', 'Fechado'),
-(10, '2025/03/19', 'Roubo', 'Roubo em trânsito', 'Aberto');
+(10, '2025/03/19', 'Roubo', 'Roubo em trÃ¢nsito', 'Aberto');
 
 -- Inserir atendentes
 INSERT INTO [Atendentes] (nome_atendente, email_atendente, telefone_atendente, cargo, data_admissao)
@@ -148,22 +148,22 @@ VALUES
 ('Juliana Atendente', 'juliana.atendente@email.com', '11999990006', 'Supervisor', '2022/05/05'),
 ('Pedro Atendente', 'pedro.atendente@email.com', '11999990007', 'Suporte', '2022/05/12'),
 ('Ana Atendente', 'ana.atendente@email.com', '11999990008', 'Gerente', '2022/08/10'),
-('João Atendente', 'joao.atendente@email.com', '11999990009', 'Suporte', '2022/08/12'),
+('JoÃ£o Atendente', 'joao.atendente@email.com', '11999990009', 'Suporte', '2022/08/12'),
 ('Rafael Atendente', 'rafael.atendente@email.com', '11999990010', 'Analista', '2022/10/01');
 
 -- Inserir atendimentos
 INSERT INTO [Atendimentos] (cliente_id, atendente_id, data_atendimento, tipo_contato, assunto, observacoes)
 VALUES
-(1, 1, '2025/01/15 10:30:50', 'Telefone', 'Dúvida sobre plano', 'Cliente com dúvidas sobre cobertura'),
-(2, 2, '2025/01/15 20:26:00', 'E-mail', 'Troca de aparelho', 'Solicitação de troca de celular'),
-(3, 3, '2025/01/28 11:55:00', 'Chat', 'Dúvida sobre pagamento', 'Cliente questionou valor da fatura'),
+(1, 1, '2025/01/15 10:30:50', 'Telefone', 'DÃºvida sobre plano', 'Cliente com dÃºvidas sobre cobertura'),
+(2, 2, '2025/01/15 20:26:00', 'E-mail', 'Troca de aparelho', 'SolicitaÃ§Ã£o de troca de celular'),
+(3, 3, '2025/01/28 11:55:00', 'Chat', 'DÃºvida sobre pagamento', 'Cliente questionou valor da fatura'),
 (4, 4, '2025/02/05 09:00:00', 'Telefone', 'Cancelamento', 'Cliente deseja cancelar o plano'),
-(5, 5, '2025/02/15 15:08:30', 'E-mail', 'Atualização de dados', 'Cliente atualizou endereço'),
+(5, 5, '2025/02/15 15:08:30', 'E-mail', 'AtualizaÃ§Ã£o de dados', 'Cliente atualizou endereÃ§o'),
 (6, 6, '2025/02/22 18:40:00', 'Chat', 'Reembolso', 'Cliente solicitou reembolso'),
 (7, 7, '2025/03/08 22:00:23', 'Telefone', 'Sinistro', 'Cliente relatou sinistro'),
 (8, 8, '2025/03/12 20:50:00', 'E-mail', 'Novo plano', 'Cliente interessado em mudar de plano'),
-(9, 9, '2025/03/23 14:30:00', 'Chat', 'Dúvida sobre apólice', 'Cliente quer detalhes'),
-(10, 10, '2025/03/23 10:10:00', 'Telefone', 'Fidelização', 'Cliente elogiou atendimento');
+(9, 9, '2025/03/23 14:30:00', 'Chat', 'DÃºvida sobre apÃ³lice', 'Cliente quer detalhes'),
+(10, 10, '2025/03/23 10:10:00', 'Telefone', 'FidelizaÃ§Ã£o', 'Cliente elogiou atendimento');
 
 GO
 
