@@ -1,7 +1,7 @@
 CREATE TABLE [Clientes] (
   [cliente_id] int PRIMARY KEY IDENTITY(1, 1),
   [nome] varchar(100),
-  [cpf] varchar(14) UNIQUE,
+  [cpf] varchar(11) UNIQUE,
   [email] varchar(100),
   [telefone] varchar(15),
   [data_cadastro] date
@@ -139,4 +139,4 @@ ALTER TABLE [Atendimentos] ADD FOREIGN KEY ([atendente_id]) REFERENCES [Atendent
 GO
 
 ALTER TABLE Clientes
-ADD CONSTRAINT chk_cpf_length CHECK (LEN(cpf) = 14);
+ADD CONSTRAINT chk_cpf_length CHECK (LEN(cpf) = 11);
