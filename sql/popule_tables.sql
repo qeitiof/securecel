@@ -1,16 +1,16 @@
 -- Inserir clientes
 INSERT INTO [Clientes] (nome, cpf, email, telefone, data_cadastro)
 VALUES
-('João Silva', '12345678900', 'joao.silva@email.com', '11999990000', '2025/01/05'),
-('Maria Souza', '98765432100', 'maria.souza@email.com', '11999991111', '2025/01/06'),
-('Pedro Santos', '11122233344', 'pedro.santos@email.com', '11999992222', '2025/01/10'),
-('Ana Oliveira', '55566677788', 'ana.oliveira@email.com', '11999993333', '2025/01/13'),
-('Lucas Costa', '44455566677', 'lucas.costa@email.com', '11999994444', '2025/01/16'),
-('Mariana Lima', '88899900011', 'mariana.lima@email.com', '11999995555', '2025/01/17'),
-('Carlos Mendes', '77788899900', 'carlos.mendes@email.com', '11999996666', '2025/01/20'),
-('Paula Ramos', '33344455566', 'paula.ramos@email.com', '11999997777', '2025/01/20'),
-('Felipe Alves', '22233344455', 'felipe.alves@email.com', '11999998888', '2025/01/29'),
-('Juliana Pires', '66677788899', 'juliana.pires@email.com', '11999999999', '2025/02/01');
+('João Silva', '123.456.789-00', 'joao.silva@email.com', '11999990000', '2025/01/05'),
+('Maria Souza', '987.654.321-00', 'maria.souza@email.com', '11999991111', '2025/01/06'),
+('Pedro Santos', '111.222.333-44', 'pedro.santos@email.com', '11999992222', '2025/01/10'),
+('Ana Oliveira', '555.666.777-88', 'ana.oliveira@email.com', '11999993333', '2025/01/13'),
+('Lucas Costa', '444.555.666-77', 'lucas.costa@email.com', '11999994444', '2025/01/16'),
+('Mariana Lima', '888.999.000-11', 'mariana.lima@email.com', '11999995555', '2025/01/17'),
+('Carlos Mendes', '777.888.999-00', 'carlos.mendes@email.com', '11999996666', '2025/01/20'),
+('Paula Ramos', '333.444.555-66', 'paula.ramos@email.com', '11999997777', '2025/01/20'),
+('Felipe Alves', '222.333.444-55', 'felipe.alves@email.com', '11999998888', '2025/01/29'),
+('Juliana Pires', '666.777.888-99', 'juliana.pires@email.com', '11999999999', '2025/02/01');
 
 INSERT INTO [Marcas] (nome)
 VALUES
