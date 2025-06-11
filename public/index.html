@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Seguros de Celulares</title>
+  </head>
+  <body>
+    <h1>Sistema de Seguros de Celulares</h1>
+
+    <div id="mainMenu">
+      <button onclick="showSection('clientes')">Clientes</button>
+      <button onclick="showSection('marcas')">Marcas</button>
+      <button onclick="showSection('celulares')">Celulares</button>
+      <button onclick="showSection('planos')">Planos</button>
+      <button onclick="showSection('coberturas')">Coberturas</button>
+      <button onclick="showSection('apolices')">Apólices</button>
+    </div>
+
+    <!-- Seção de Clientes -->
+    <div id="clientes" class="section" style="display: none">
+      <h2>Gerenciamento de Clientes</h2>
+      <form id="clienteForm">
+        <input type="hidden" id="cliente_id" />
+        <input type="text" id="cliente_nome" placeholder="Nome" required />
+        <input type="email" id="cliente_email" placeholder="Email" required />
+        <input
+          type="text"
+          id="cliente_telefone"
+          placeholder="(00) 0 0000-0000"
+          maxlength="16"
+          required
+        />
+        <input
+          type="text"
+          id="cliente_cpf"
+          placeholder="000.000.000-00"
+          maxlength="14"
+          required
+        />
+        <button type="submit">Salvar</button>
+        <button type="button" onclick="limparFormulario('clienteForm')">
+          Limpar
+        </button>
+      </form>
+      <div id="clientesLista"></div>
+    </div>
+
+    <!-- Seção de Marcas -->
+    <div id="marcas" class="section" style="display: none">
+      <h2>Gerenciamento de Marcas</h2>
+      <form id="marcaForm">
+        <input type="hidden" id="marca_id" />
+        <input
+          type="text"
+          id="marca_nome"
+          placeholder="Nome da Marca"
+          required
+        />
+
+        <button type="submit">Salvar</button>
+        <button type="button" onclick="limparFormulario('marcaForm')">
+          Limpar
+        </button>
+      </form>
+      <div id="marcasLista"></div>
+    </div>
+
+    <!-- Seção de Celulares -->
+    <div id="celulares" class="section" style="display: none">
+      <h2>Gerenciamento de Celulares</h2>
+      <form id="celularForm">
+        <input type="hidden" id="celular_id" />
+        <select id="celular_marca" required></select>
+        <input type="text" id="celular_modelo" placeholder="Modelo" required />
+        <input type="text" id="celular_imei" placeholder="IMEI" required />
+        <input type="number" id="celular_valor" placeholder="Valor" required />
+        <button type="submit">Salvar</button>
+        <button type="button" onclick="limparFormulario('celularForm')">
+          Limpar
+        </button>
+      </form>
+      <div id="celularesLista"></div>
+    </div>
+
+    <!-- Seção de Planos -->
+    <div id="planos" class="section" style="display: none">
+      <h2>Gerenciamento de Planos</h2>
+      <form id="planoForm">
+        <input type="hidden" id="plano_id" />
+        <input
+          type="text"
+          id="plano_nome"
+          placeholder="Nome do Plano"
+          required
+        />
+        <textarea
+          id="plano_descricao"
+          placeholder="Descrição"
+          required
+        ></textarea>
+        <input
+          type="number"
+          id="plano_valor"
+          placeholder="Valor Mensal"
+          required
+        />
+        <button type="submit">Salvar</button>
+        <button type="button" onclick="limparFormulario('planoForm')">
+          Limpar
+        </button>
+      </form>
+      <div id="planosLista"></div>
+    </div>
+
+    <!-- Seção de Coberturas -->
+    <div id="coberturas" class="section" style="display: none">
+      <h2>Gerenciamento de Coberturas</h2>
+      <form id="coberturaForm">
+        <input type="hidden" id="cobertura_id" />
+        <select id="cobertura_plano" required></select>
+        <textarea
+          id="cobertura_descricao"
+          placeholder="Descrição"
+          required
+        ></textarea>
+        <button type="submit">Salvar</button>
+        <button type="button" onclick="limparFormulario('coberturaForm')">
+          Limpar
+        </button>
+      </form>
+      <div id="coberturasLista"></div>
+    </div>
+
+    <!-- Seção de Apólices -->
+    <div id="apolices" class="section" style="display: none">
+      <h2>Gerenciamento de Apólices</h2>
+      <form id="apoliceForm">
+        <input type="hidden" id="apolice_id" />
+        <select id="apolice_cliente" required></select>
+        <select id="apolice_celular" required></select>
+        <select id="apolice_plano" required></select>
+        <input
+          type="date"
+          id="apolice_inicio"
+          required
+          onchange="updateDateConstraints('inicio')"
+        />
+        <input
+          type="date"
+          id="apolice_fim"
+          required
+          onchange="updateDateConstraints('fim')"
+        />
+        <select id="apolice_status" required>
+          <option value="ATIVA">Ativa</option>
+          <option value="CANCELADA">Cancelada</option>
+          <option value="SUSPENSA">Suspensa</option>
+        </select>
+        <div id="coberturasContainer">
+          <h3>Coberturas</h3>
+          <div id="coberturasDisponiveis"></div>
+        </div>
+        <button type="submit">Salvar</button>
+        <button type="button" onclick="limparFormulario('apoliceForm')">
+          Limpar
+        </button>
+      </form>
+      <div id="apolicesLista"></div>
+    </div>
+
+    <script>
+      // Funções auxiliares
+      function showSection(sectionId) {
+        document.querySelectorAll(".section").forEach((section) => {
+          section.style.display = "none";
+        });
+        document.getElementById(sectionId).style.display = "block";
+        carregarDados(sectionId);
+      }
+
+      function limparFormulario(formId) {
+        document.getElementById(formId).reset();
+        document
+          .getElementById(formId)
+          .querySelector('input[type="hidden"]').value = "";
+      }
+
+      async function carregarDados(secao) {
+        try {
+          const response = await fetch(`/api/${secao}`);
+          const data = await response.json();
+
+          loadFuncion().then(() => {
+            atualizarLista(secao, data);
+          });
+        } catch (error) {
+          console.error(`Erro ao carregar ${secao}:`, error);
+        }
+      }
+
+      function atualizarLista(secao, dados) {
+        const lista = document.getElementById(`${secao}Lista`);
+        lista.innerHTML = "";
+
+        dados.forEach((item) => {
+          const div = document.createElement("div");
+
+          div.innerHTML = `
+            <p>
+                ${formatarItem(secao, item)}
+                <button onclick='editar${capitalize(secao)}(${JSON.stringify(
+            item
+          ).replace(/'/g, "\\'")})'>Editar</button>
+                <button onclick='excluir${capitalize(secao)}(${
+            item[`${secao.slice(0, -1)}_id`]
+          })'>Excluir</button>
+            </p>
+        `;
+          lista.appendChild(div);
+        });
+      }
+
+      function formatarItem(secao, item) {
+        switch (secao) {
+          case "clientes":
+            return `Nome: ${item.nome} | Email: ${item.email} | Telefone: ${item.telefone} | CPF: ${item.cpf}`;
+          case "marcas":
+            return `Marca: ${item.nome} `;
+          case "celulares":
+            return `Modelo: ${item.modelo} | IMEI: ${item.imei} | Valor: ${item.valor}`;
+          case "planos":
+            return `Plano: ${item.nome_plano} | Valor: ${item.valor_mensal}`;
+          case "coberturas":
+            return `Cobertura: ${item.descricao} | Descrição: ${item.descricao}`;
+          case "apolices":
+            return `Cliente: ${item.cliente_nome} | Plano: ${item.nome_plano} | Celular: ${item.celular_modelo} | Status: ${item.status}`;
+          default:
+            return JSON.stringify(item);
+        }
+      }
+
+      function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+
+      // Funções específicas para cada seção
+      // Clientes
+      document
+        .getElementById("clienteForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const cliente = {
+            nome: document.getElementById("cliente_nome").value,
+            email: document.getElementById("cliente_email").value,
+            telefone: unmaskTelefone(
+              document.getElementById("cliente_telefone").value
+            ),
+            cpf: unmaskCPF(document.getElementById("cliente_cpf").value),
+          };
+
+          const id = document.getElementById("cliente_id").value;
+          const url = `/api/clientes${id ? `/${id}` : ""}`;
+          const method = id ? "PUT" : "POST";
+
+          try {
+            const response = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(cliente),
+            });
+
+            if (response.ok) {
+              limparFormulario("clienteForm");
+              carregarDados("clientes");
+            }
+          } catch (error) {
+            console.error("Erro ao salvar cliente:", error);
+          }
+        });
+
+      async function editarClientes(cliente) {
+        document.getElementById("cliente_id").value = cliente.cliente_id;
+        document.getElementById("cliente_nome").value = cliente.nome;
+        document.getElementById("cliente_email").value = cliente.email;
+        document.getElementById("cliente_telefone").value = cliente.telefone;
+        document.getElementById("cliente_cpf").value = cliente.cpf;
+      }
+
+      async function excluirClientes(id) {
+        if (confirm("Tem certeza que deseja excluir este cliente?")) {
+          try {
+            const response = await fetch(`/api/clientes/${id}`, {
+              method: "DELETE",
+            });
+
+            if (response.ok) {
+              carregarDados("clientes");
+            } else {
+              const errorData = await response.json();
+              alert(errorData.message || "Erro ao excluir cliente");
+            }
+          } catch (error) {
+            console.error("Erro ao excluir cliente:", error);
+            alert("Erro ao excluir cliente. Por favor, tente novamente.");
+          }
+        }
+      }
+
+      // Marcas
+      document
+        .getElementById("marcaForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const marca = {
+            nome: document.getElementById("marca_nome").value,
+          };
+
+          const id = document.getElementById("marca_id").value;
+          const url = `/api/marcas${id ? `/${id}` : ""}`;
+          const method = id ? "PUT" : "POST";
+
+          try {
+            const response = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(marca),
+            });
+
+            if (response.ok) {
+              limparFormulario("marcaForm");
+              carregarDados("marcas");
+            }
+          } catch (error) {
+            console.error("Erro ao salvar marca:", error);
+          }
+        });
+
+      async function editarMarcas(marca) {
+        document.getElementById("marca_id").value = marca.marca_id;
+        document.getElementById("marca_nome").value = marca.nome;
+      }
+
+      async function excluirMarcas(id) {
+        if (confirm("Tem certeza que deseja excluir esta marca?")) {
+          try {
+            const response = await fetch(`/api/marcas/${id}`, {
+              method: "DELETE",
+            });
+
+            if (response.ok) {
+              carregarDados("marcas");
+            } else {
+              const errorData = await response.json();
+              alert(errorData.message || "Erro ao excluir marca");
+            }
+          } catch (error) {
+            console.error("Erro ao excluir marca:", error);
+            alert("Erro ao excluir marca. Por favor, tente novamente.");
+          }
+        }
+      }
+
+      // Celulares
+      document
+        .getElementById("celularForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const celular = {
+            marca_id: document.getElementById("celular_marca").value,
+            modelo: document.getElementById("celular_modelo").value,
+            imei: document.getElementById("celular_imei").value,
+            valor: document.getElementById("celular_valor").value,
+          };
+
+          const id = document.getElementById("celular_id").value;
+          const url = `/api/celulares${id ? `/${id}` : ""}`;
+          const method = id ? "PUT" : "POST";
+
+          try {
+            const response = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(celular),
+            });
+
+            if (response.ok) {
+              limparFormulario("celularForm");
+              carregarDados("celulares");
+            }
+          } catch (error) {
+            console.error("Erro ao salvar celular:", error);
+          }
+        });
+
+      async function editarCelulares(celular) {
+        document.getElementById("celular_id").value = celular.celular_id;
+        document.getElementById("celular_marca").value = celular.marca_id;
+        document.getElementById("celular_modelo").value = celular.modelo;
+        document.getElementById("celular_imei").value = celular.imei;
+        document.getElementById("celular_valor").value = celular.valor;
+      }
+
+      async function excluirCelulares(id) {
+        if (confirm("Tem certeza que deseja excluir este celular?")) {
+          try {
+            const response = await fetch(`/api/celulares/${id}`, {
+              method: "DELETE",
+            });
+
+            if (response.ok) {
+              carregarDados("celulares");
+            } else {
+              const errorData = await response.json();
+              alert(errorData.message || "Erro ao excluir celular");
+            }
+          } catch (error) {
+            console.error("Erro ao excluir celular:", error);
+            alert("Erro ao excluir celular. Por favor, tente novamente.");
+          }
+        }
+      }
+
+      // Planos
+      document
+        .getElementById("planoForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const plano = {
+            nome_plano: document.getElementById("plano_nome").value,
+            descricao: document.getElementById("plano_descricao").value,
+            valor_mensal: document.getElementById("plano_valor").value,
+          };
+
+          const id = document.getElementById("plano_id").value;
+          const url = `/api/planos${id ? `/${id}` : ""}`;
+          const method = id ? "PUT" : "POST";
+
+          try {
+            const response = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(plano),
+            });
+
+            if (response.ok) {
+              limparFormulario("planoForm");
+              carregarDados("planos");
+            }
+          } catch (error) {
+            console.error("Erro ao salvar plano:", error);
+          }
+        });
+
+      async function editarPlanos(plano) {
+        document.getElementById("plano_id").value = plano.plano_id;
+        document.getElementById("plano_nome").value = plano.nome_plano;
+        document.getElementById("plano_descricao").value = plano.descricao;
+        document.getElementById("plano_valor").value = plano.valor_mensal;
+      }
+
+      async function excluirPlanos(id) {
+        if (confirm("Tem certeza que deseja excluir este plano?")) {
+          try {
+            const response = await fetch(`/api/planos/${id}`, {
+              method: "DELETE",
+            });
+
+            if (response.ok) {
+              carregarDados("planos");
+            } else {
+              const errorData = await response.json();
+              alert(errorData.message || "Erro ao excluir plano");
+            }
+          } catch (error) {
+            console.error("Erro ao excluir plano:", error);
+            alert("Erro ao excluir plano. Por favor, tente novamente.");
+          }
+        }
+      }
+
+      // Coberturas
+      document
+        .getElementById("coberturaForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const cobertura = {
+            plano_id: parseInt(
+              document.getElementById("cobertura_plano").value
+            ),
+            descricao: document.getElementById("cobertura_descricao").value,
+          };
+
+          const id = document.getElementById("cobertura_id").value;
+          const url = `/api/coberturas${id ? `/${id}` : ""}`;
+          const method = id ? "PUT" : "POST";
+
+          try {
+            const response = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(cobertura),
+            });
+
+            if (response.ok) {
+              limparFormulario("coberturaForm");
+              carregarDados("coberturas");
+            }
+          } catch (error) {
+            console.error("Erro ao salvar cobertura:", error);
+          }
+        });
+
+      async function editarCoberturas(cobertura) {
+        document.getElementById("cobertura_id").value = cobertura.cobertura_id;
+        document.getElementById("cobertura_plano").value = cobertura.plano_id;
+        document.getElementById("cobertura_descricao").value =
+          cobertura.descricao;
+      }
+
+      async function excluirCoberturas(id) {
+        if (confirm("Tem certeza que deseja excluir esta cobertura?")) {
+          try {
+            const response = await fetch(`/api/coberturas/${id}`, {
+              method: "DELETE",
+            });
+
+            if (response.ok) {
+              carregarDados("coberturas");
+            } else {
+              const errorData = await response.json();
+              alert(errorData.message || "Erro ao excluir cobertura");
+            }
+          } catch (error) {
+            console.error("Erro ao excluir cobertura:", error);
+            alert("Erro ao excluir cobertura. Por favor, tente novamente.");
+          }
+        }
+      }
+
+      // Apólices
+      document
+        .getElementById("apoliceForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const apolice = {
+            cliente_id: document.getElementById("apolice_cliente").value,
+            celular_id: document.getElementById("apolice_celular").value,
+            plano_id: document.getElementById("apolice_plano").value,
+            data_inicio: document.getElementById("apolice_inicio").value,
+            data_fim: document.getElementById("apolice_fim").value,
+            status: document.getElementById("apolice_status").value,
+            detalhes: Array.from(
+              document.querySelectorAll('input[name="cobertura"]:checked')
+            ).map((cb) => ({
+              cobertura_id: parseInt(cb.value),
+              valor_cobertura: parseFloat(cb.dataset.valor),
+            })),
+          };
+
+          const id = document.getElementById("apolice_id").value;
+          const url = `/api/apolices${id ? `/${id}` : ""}`;
+          const method = id ? "PUT" : "POST";
+
+          try {
+            const response = await fetch(url, {
+              method,
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(apolice),
+            });
+
+            if (response.ok) {
+              limparFormulario("apoliceForm");
+              carregarDados("apolices");
+            }
+          } catch (error) {
+            console.error("Erro ao salvar apólice:", error);
+          }
+        });
+
+      async function editarApolices(apolice) {
+        const dateFormatter = new Intl.DateTimeFormat("fr-CA", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        });
+
+        console.log(dateFormatter.format(new Date(apolice.data_fim)));
+
+        document.getElementById("apolice_id").value = apolice.apolice_id;
+        document.getElementById("apolice_cliente").value = apolice.cliente_id;
+        document.getElementById("apolice_celular").value = apolice.celular_id;
+        document.getElementById("apolice_plano").value = apolice.plano_id;
+        document.getElementById("apolice_inicio").value = dateFormatter.format(
+          new Date(apolice.data_inicio)
+        );
+        document.getElementById("apolice_fim").value = dateFormatter.format(
+          new Date(apolice.data_fim)
+        );
+        document.getElementById("apolice_status").value = apolice.status;
+      }
+
+      async function excluirApolices(id) {
+        if (confirm("Tem certeza que deseja excluir esta apólice?")) {
+          try {
+            const response = await fetch(`/api/apolices/${id}`, {
+              method: "DELETE",
+            });
+
+            if (response.ok) {
+              carregarDados("apolices");
+            } else {
+              const errorData = await response.json();
+              alert(errorData.message || "Erro ao excluir apólice");
+            }
+          } catch (error) {
+            console.error("Erro ao excluir apólice:", error);
+            alert("Erro ao excluir apólice. Por favor, tente novamente.");
+          }
+        }
+      }
+
+      // Carregar dados iniciais
+      const loadFuncion = async () => {
+        // Carregar marcas para o select de celulares
+        const marcas = await fetch("/api/marcas").then((r) => r.json());
+        const marcaSelect = document.getElementById("celular_marca");
+        marcas.forEach((marca) => {
+          const option = document.createElement("option");
+          option.value = marca.marca_id;
+          option.textContent = marca.nome;
+          marcaSelect.appendChild(option);
+        });
+
+        // Carregar planos para o select de coberturas
+        const planos = await fetch("/api/planos").then((r) => r.json());
+        const planoSelect = document.getElementById("cobertura_plano");
+        planos.forEach((plano) => {
+          const option = document.createElement("option");
+          option.value = plano.plano_id;
+          option.textContent = plano.nome_plano;
+          planoSelect.appendChild(option);
+        });
+
+        // Carregar clientes para o select de apólices
+        const clientes = await fetch("/api/clientes").then((r) => r.json());
+        const clienteSelect = document.getElementById("apolice_cliente");
+        clientes.forEach((cliente) => {
+          const option = document.createElement("option");
+          option.value = cliente.cliente_id;
+          option.textContent = cliente.nome;
+          clienteSelect.appendChild(option);
+        });
+
+        // Carregar celulares para o select de apólices
+        const celulares = await fetch("/api/celulares").then((r) => r.json());
+        const celularSelect = document.getElementById("apolice_celular");
+        celulares.forEach((celular) => {
+          const option = document.createElement("option");
+          option.value = celular.celular_id;
+          option.textContent = `${celular.modelo} (${celular.imei})`;
+          celularSelect.appendChild(option);
+        });
+
+        // Carregar planos para o select de apólices
+        const planoApoliceSelect = document.getElementById("apolice_plano");
+        planos.forEach((plano) => {
+          const option = document.createElement("option");
+          option.value = plano.plano_id;
+          option.textContent = plano.nome_plano;
+          planoApoliceSelect.appendChild(option);
+        });
+      };
+      window.onload = loadFuncion;
+      function maskCPF(cpf) {
+        cpf = cpf.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2"); // Coloca ponto após os primeiros 3 dígitos
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2"); // Coloca ponto após os segundos 3 dígitos
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2"); // Coloca hífen antes dos últimos 2 dígitos
+        return cpf;
+      }
+
+      function unmaskCPF(cpf) {
+        return cpf.replace(/\D/g, "");
+      }
+
+      // Adiciona o evento de máscara ao input de CPF
+      document
+        .getElementById("cliente_cpf")
+        .addEventListener("input", function (e) {
+          let cursor = e.target.selectionStart;
+          let value = e.target.value;
+          value = maskCPF(value);
+
+          // Atualiza o valor com a máscara
+          e.target.value = value;
+
+          // Ajusta a posição do cursor
+          if (
+            value.charAt(cursor - 1) === "." ||
+            value.charAt(cursor - 1) === "-"
+          ) {
+            cursor++;
+          }
+          e.target.setSelectionRange(cursor, cursor);
+        });
+
+      function maskTelefone(telefone) {
+        telefone = telefone.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+        telefone = telefone.replace(/^(\d{2})(\d)/g, "($1) $2"); // Coloca parênteses em volta dos dois primeiros dígitos
+        telefone = telefone.replace(/(\d)(\d{4})$/, "$1-$2"); // Coloca hífen entre os 4 últimos dígitos
+
+        // Adiciona o espaço após o nono dígito (para celular)
+        if (telefone.length >= 13) {
+          telefone = telefone.replace(/(\)\s*)(\d)/, "$1$2 ");
+        }
+
+        return telefone;
+      }
+
+      function unmaskTelefone(telefone) {
+        return telefone.replace(/\D/g, "");
+      }
+
+      // Adiciona o evento de máscara ao input de telefone
+      document
+        .getElementById("cliente_telefone")
+        .addEventListener("input", function (e) {
+          let cursor = e.target.selectionStart;
+          let value = e.target.value;
+          let oldLength = value.length;
+          value = maskTelefone(value);
+
+          // Atualiza o valor com a máscara
+          e.target.value = value;
+
+          // Ajusta a posição do cursor considerando os caracteres especiais
+          if (value.length > oldLength) {
+            if (
+              value.charAt(cursor - 1) === "(" ||
+              value.charAt(cursor - 1) === ")" ||
+              value.charAt(cursor - 1) === " " ||
+              value.charAt(cursor - 1) === "-"
+            ) {
+              cursor++;
+            }
+            if (value.charAt(cursor - 2) === " ") {
+              cursor++;
+            }
+          }
+          e.target.setSelectionRange(cursor, cursor);
+        });
+
+      function updateDateConstraints(changedField) {
+        const inicioInput = document.getElementById("apolice_inicio");
+        const fimInput = document.getElementById("apolice_fim");
+
+        if (changedField === "inicio") {
+          // Se mudou a data de início, atualiza o mínimo da data fim
+          fimInput.min = inicioInput.value;
+
+          // Se a data fim for menor que a nova data início, ajusta para a data início
+          if (fimInput.value && fimInput.value < inicioInput.value) {
+            fimInput.value = inicioInput.value;
+          }
+        } else {
+          // Se mudou a data fim, atualiza o máximo da data início
+          inicioInput.max = fimInput.value;
+
+          // Se a data início for maior que a nova data fim, ajusta para a data fim
+          if (inicioInput.value && inicioInput.value > fimInput.value) {
+            inicioInput.value = fimInput.value;
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
