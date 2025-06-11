@@ -142,5 +142,5 @@ ALTER TABLE Clientes
 ADD CONSTRAINT chk_cpf_length CHECK (LEN(cpf) = 11);
 
 ALTER TABLE Celulares
-ADD CONSTRAINT chk_imei_length CHECK (LEN(imei) <= 20);
+ADD CONSTRAINT chk_imei_length CHECK (LEN(imei) >= 15 and LEN(imei) <= 20);
 
