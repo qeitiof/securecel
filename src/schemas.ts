@@ -82,22 +82,30 @@ export const pagamentoSchema = z.object({
   metodo_pagamento_id: z.string(),
 });
 
+// Schemas para Atendentes
 export const atendenteSchema = z.object({
-  nome_atendente: z.string().min(2),
-  email_atendente: z.string().email(),
-  telefone_atendente: z.string().min(11),
-  cargo: z.string().min(2),
-  data_admissao: z.string().transform((str) => new Date(str)),
+  nome_atendente: z.string().min(1, "Nome é obrigatório"),
+  email_atendente: z.string().email("Email inválido"),
+  telefone_atendente: z.string().min(1, "Telefone é obrigatório"),
+  cargo: z.string().min(1, "Cargo é obrigatório"),
+  data_admissao: z.string().min(1, "Data de admissão é obrigatória"),
 });
 
+export const updateAtendenteSchema = atendenteSchema.partial();
+
+// Schemas para Atendimentos
 export const atendimentoSchema = z.object({
   cliente_id: z.string(),
   atendente_id: z.string(),
-  data_atendimento: z.string().transform((str) => new Date(str)),
-  tipo_contato: z.enum(["TELEFONE", "EMAIL", "CHAT", "PRESENCIAL"]),
-  assunto: z.string().min(2),
-  observacoes: z.string(),
+  data_atendimento: z.string().min(1, "Data do atendimento é obrigatória"),
+  tipo_contato: z.enum(["TELEFONE", "EMAIL", "WHATSAPP", "PRESENCIAL"], {
+    errorMap: () => ({ message: "Tipo de contato inválido" }),
+  }),
+  assunto: z.string().min(1, "Assunto é obrigatório"),
+  observacoes: z.string().min(1, "Observações são obrigatórias"),
 });
+
+export const updateAtendimentoSchema = atendimentoSchema.partial();
 
 export const sinistroSchema = z.object({
   apolice_id: z.string(),
@@ -109,6 +117,4 @@ export const sinistroSchema = z.object({
 
 export const updateMetodoPagamentoSchema = metodoPagamentoSchema.partial();
 export const updatePagamentoSchema = pagamentoSchema.partial();
-export const updateAtendenteSchema = atendenteSchema.partial();
-export const updateAtendimentoSchema = atendimentoSchema.partial();
 export const updateSinistroSchema = sinistroSchema.partial();

@@ -3,12 +3,14 @@ import cors from "cors";
 import dotenv from "dotenv";
 import sql from "mssql";
 import { z } from "zod";
-import clientesRouter from './routes/clientes';
-import marcasRouter from './routes/marcas';
-import celularesRouter from './routes/celulares';
-import planosRouter from './routes/planos';
-import coberturasRouter from './routes/coberturas';
-import apolicesRouter from './routes/apolices';
+import clientesRouter from "./routes/clientes";
+import marcasRouter from "./routes/marcas";
+import celularesRouter from "./routes/celulares";
+import planosRouter from "./routes/planos";
+import coberturasRouter from "./routes/coberturas";
+import apolicesRouter from "./routes/apolices";
+import atendentesRouter from "./routes/atendentes";
+import atendimentosRouter from "./routes/atendimentos";
 // Carrega as variáveis de ambiente do arquivo .env
 dotenv.config();
 
@@ -52,12 +54,14 @@ app.use(express.json()); // Parseia requisições JSON
 app.use(express.static("public"));
 
 // Rotas
-app.use('/api/clientes', clientesRouter);
-app.use('/api/marcas', marcasRouter);
-app.use('/api/celulares', celularesRouter);
-app.use('/api/planos', planosRouter);
-app.use('/api/coberturas', coberturasRouter);
-app.use('/api/apolices', apolicesRouter);
+app.use("/api/clientes", clientesRouter);
+app.use("/api/marcas", marcasRouter);
+app.use("/api/celulares", celularesRouter);
+app.use("/api/planos", planosRouter);
+app.use("/api/coberturas", coberturasRouter);
+app.use("/api/apolices", apolicesRouter);
+app.use("/api/atendentes", atendentesRouter);
+app.use("/api/atendimentos", atendimentosRouter);
 
 // Rota padrão para servir o index.html
 app.get("/", (req: Request, res: Response) => {
@@ -71,12 +75,10 @@ app.get("/clientes", async (req: Request, res: Response) => {
     const result = await pool.request().query("SELECT * from clientes");
     res.json(result.recordset);
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        message: "Erro ao conectar ao banco de dados",
-        error: (err as Error).message,
-      });
+    res.status(500).json({
+      message: "Erro ao conectar ao banco de dados",
+      error: (err as Error).message,
+    });
   }
 });
 
@@ -116,10 +118,10 @@ app.post("/clientes", (async (req: Request, res: Response) => {
     if (err instanceof z.ZodError) {
       return res.status(400).json({
         message: "Erro de validação dos dados",
-        errors: err.errors.map(error => ({
-          field: error.path.join('.'),
-          message: error.message
-        }))
+        errors: err.errors.map((error) => ({
+          field: error.path.join("."),
+          message: error.message,
+        })),
       });
     }
 
@@ -142,15 +144,17 @@ app.put("/clientes/:id", (async (req: Request, res: Response) => {
     }
 
     const updateData = updateCostumerSchema.parse(req.body);
-    
+
     const pool = await connectToDatabase();
-    
+
     // Verifica se o cliente existe
     const checkResult = await pool
       .request()
       .input("cliente_id", sql.Int, id)
-      .query("SELECT COUNT(*) as count FROM clientes WHERE cliente_id = @cliente_id");
-    
+      .query(
+        "SELECT COUNT(*) as count FROM clientes WHERE cliente_id = @cliente_id"
+      );
+
     if (checkResult.recordset[0].count === 0) {
       return res.status(404).json({
         message: "Cliente não encontrado",
@@ -159,9 +163,9 @@ app.put("/clientes/:id", (async (req: Request, res: Response) => {
 
     // Constrói a query dinamicamente baseada nos campos fornecidos
     const updateFields = Object.keys(updateData)
-      .map(key => `${key} = @${key}`)
+      .map((key) => `${key} = @${key}`)
       .join(", ");
-    
+
     const query = `
       UPDATE clientes 
       SET ${updateFields}
@@ -170,17 +174,15 @@ app.put("/clientes/:id", (async (req: Request, res: Response) => {
 
     console.log("query");
     console.log(query);
-    
 
     const request = pool.request().input("cliente_id", sql.Int, id);
-    
+
     // Adiciona os parâmetros dinamicamente
     Object.entries(updateData).forEach(([key, value]) => {
       request.input(key, sql.VarChar, value);
     });
 
-    await request
-    .query(query);
+    await request.query(query);
 
     return res.status(200).json({
       message: "Cliente atualizado com sucesso",
@@ -189,10 +191,10 @@ app.put("/clientes/:id", (async (req: Request, res: Response) => {
     if (err instanceof z.ZodError) {
       return res.status(400).json({
         message: "Erro de validação dos dados",
-        errors: err.errors.map(error => ({
-          field: error.path.join('.'),
-          message: error.message
-        }))
+        errors: err.errors.map((error) => ({
+          field: error.path.join("."),
+          message: error.message,
+        })),
       });
     }
 
@@ -215,13 +217,15 @@ app.delete("/clientes/:id", (async (req: Request, res: Response) => {
     }
 
     const pool = await connectToDatabase();
-    
+
     // Verifica se o cliente existe
     const checkResult = await pool
       .request()
       .input("cliente_id", sql.Int, id)
-      .query("SELECT COUNT(*) as count FROM clientes WHERE cliente_id = @cliente_id");
-    
+      .query(
+        "SELECT COUNT(*) as count FROM clientes WHERE cliente_id = @cliente_id"
+      );
+
     if (checkResult.recordset[0].count === 0) {
       return res.status(404).json({
         message: "Cliente não encontrado",
