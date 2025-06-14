@@ -4,6 +4,315 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sistema de Seguros de Celulares</title>
+
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --accent-color: #e74c3c;
+        --light-color: #ecf0f1;
+        --dark-color: #2c3e50;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --border-radius: 5px;
+        --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f7fa;
+        color: var(--dark-color);
+        line-height: 1.6;
+      }
+
+      h1, h2, h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        text-align: center;
+        padding: 1.5rem;
+        background-color: var(--primary-color);
+        color: white;
+        box-shadow: var(--box-shadow);
+      }
+
+      #mainMenu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1rem;
+        background-color: white;
+        box-shadow: var(--box-shadow);
+        margin-bottom: 2rem;
+      }
+
+      #mainMenu button {
+        background-color: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: bold;
+        transition: var(--transition);
+        box-shadow: var(--box-shadow);
+      }
+
+      #mainMenu button:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+      }
+
+      .section {
+        max-width: 1200px;
+        margin: 0 auto 2rem;
+        padding: 2rem;
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+      }
+
+      form {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background-color: var(--light-color);
+        border-radius: var(--border-radius);
+      }
+
+      input, select, textarea {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        transition: var(--transition);
+      }
+
+      input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      }
+
+      button[type="submit"] {
+        background-color: var(--success-color);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: bold;
+        transition: var(--transition);
+        grid-column: 1 / -1;
+      }
+
+      button[type="submit"]:hover {
+        background-color: #219653;
+      }
+
+      button[type="button"] {
+        background-color: var(--warning-color);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: bold;
+        transition: var(--transition);
+        grid-column: 1 / -1;
+      }
+
+      button[type="button"]:hover {
+        background-color: #e67e22;
+      }
+
+      #coberturasContainer {
+        grid-column: 1 / -1;
+        padding: 1rem;
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+      }
+
+      #coberturasDisponiveis {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      #coberturasDisponiveis label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background-color: var(--light-color);
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      #coberturasDisponiveis label:hover {
+        background-color: #d5dbdb;
+      }
+
+      #clientesLista,
+      #marcasLista,
+      #celularesLista,
+      #planosLista,
+      #coberturasLista,
+      #apolicesLista,
+      #atendentesLista,
+      #atendimentosLista {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      #clientesLista > div,
+      #marcasLista > div,
+      #celularesLista > div,
+      #planosLista > div,
+      #coberturasLista > div,
+      #apolicesLista > div,
+      #atendentesLista > div,
+      #atendimentosLista > div {
+        padding: 1.5rem;
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+      }
+
+      #clientesLista p,
+      #marcasLista p,
+      #celularesLista p,
+      #planosLista p,
+      #coberturasLista p,
+      #apolicesLista p,
+      #atendentesLista p,
+      #atendimentosLista p {
+        margin-bottom: 1rem;
+      }
+
+      #clientesLista button,
+      #marcasLista button,
+      #celularesLista button,
+      #planosLista button,
+      #coberturasLista button,
+      #apolicesLista button,
+      #atendentesLista button,
+      #atendimentosLista button {
+        padding: 0.5rem 1rem;
+        margin-right: 0.5rem;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: bold;
+        transition: var(--transition);
+      }
+
+      #clientesLista button:first-of-type,
+      #marcasLista button:first-of-type,
+      #celularesLista button:first-of-type,
+      #planosLista button:first-of-type,
+      #coberturasLista button:first-of-type,
+      #apolicesLista button:first-of-type,
+      #atendentesLista button:first-of-type,
+      #atendimentosLista button:first-of-type {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+
+      #clientesLista button:first-of-type:hover,
+      #marcasLista button:first-of-type:hover,
+      #celularesLista button:first-of-type:hover,
+      #planosLista button:first-of-type:hover,
+      #coberturasLista button:first-of-type:hover,
+      #apolicesLista button:first-of-type:hover,
+      #atendentesLista button:first-of-type:hover,
+      #atendimentosLista button:first-of-type:hover {
+        background-color: #2980b9;
+      }
+
+      #clientesLista button:last-of-type,
+      #marcasLista button:last-of-type,
+      #celularesLista button:last-of-type,
+      #planosLista button:last-of-type,
+      #coberturasLista button:last-of-type,
+      #apolicesLista button:last-of-type,
+      #atendentesLista button:last-of-type,
+      #atendimentosLista button:last-of-type {
+        background-color: var(--danger-color);
+        color: white;
+      }
+
+      #clientesLista button:last-of-type:hover,
+      #marcasLista button:last-of-type:hover,
+      #celularesLista button:last-of-type:hover,
+      #planosLista button:last-of-type:hover,
+      #coberturasLista button:last-of-type:hover,
+      #apolicesLista button:last-of-type:hover,
+      #atendentesLista button:last-of-type:hover,
+      #atendimentosLista button:last-of-type:hover {
+        background-color: #c0392b;
+      }
+
+      .status-ativa {
+        color: var(--success-color);
+        font-weight: bold;
+      }
+
+      .status-cancelada {
+        color: var(--danger-color);
+        font-weight: bold;
+      }
+
+      .status-suspensa {
+        color: var(--warning-color);
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        #mainMenu {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        #mainMenu button {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+
+        form {
+          grid-template-columns: 1fr;
+        }
+
+        #clientesLista,
+        #marcasLista,
+        #celularesLista,
+        #planosLista,
+        #coberturasLista,
+        #apolicesLista,
+        #atendentesLista,
+        #atendimentosLista {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </head>
   <body>
     <h1>Sistema de Seguros de Celulares</h1>
