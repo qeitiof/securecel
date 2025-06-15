@@ -35,7 +35,7 @@ GO
 CREATE TABLE Coberturas (
   cobertura_id int PRIMARY KEY IDENTITY(1, 1),
   plano_id int,
-  descricao varchar(500),
+  descricao varchar(500)
 )
 GO
 
@@ -51,7 +51,12 @@ CREATE TABLE Detalhes_Apolices (
   apolice_id int,
   data_inicio date,
   data_fim date,
-  status_apolice varchar(20)
+  status_apolice_id int
+)
+GO
+CREATE TABLE Status_Apolices (
+  status_apolice_id int PRIMARY KEY IDENTITY(1, 1),
+  nome_status varchar(50)
 )
 GO
 
@@ -60,8 +65,14 @@ CREATE TABLE Pagamentos (
   apolice_id int,
   data_pagamento date,
   valor_pago decimal(10,2),
-  status_pagamentos varchar(20),
+  status_pagamentos_id int,
   metodo_pagamento_id int
+)
+GO
+
+CREATE TABLE Status_Pagamentos (
+  status_pagamento_id int PRIMARY KEY IDENTITY(1, 1),
+  nome_status varchar(50)
 )
 GO
 
@@ -75,9 +86,19 @@ CREATE TABLE Sinistros (
   sinistro_id int PRIMARY KEY IDENTITY(1, 1),
   apolice_id int,
   data_ocorrencia date,
-  tipo_ocorrencia varchar(30),
+  tipo_ocorrencia_id int,
   descricao varchar(500),
-  status_sinistro varchar(20)
+  status_sinistro_id int
+)
+GO
+CREATE TABLE Tipos_Ocorrencia (
+  tipo_ocorrencia_id int PRIMARY KEY IDENTITY(1, 1),
+  nome_tipo varchar(50)
+)
+GO
+CREATE TABLE Status_Sinistros (
+  status_sinistro_id int PRIMARY KEY IDENTITY(1, 1),
+  nome_status varchar(50)
 )
 GO
 
@@ -88,13 +109,12 @@ CREATE TABLE Atendimentos (
   data_atendimento datetime,
   tipo_contato_id int,
   assunto varchar(100),
-  observacoes varchar(500),
+  observacoes varchar(500)
 )
 GO
 create table Tipos_Contato_Atendimento (
   tipo_contato_id int PRIMARY KEY IDENTITY(1, 1),
-  nome_tipo varchar(50),
-  descricao_tipo varchar(500)
+  nome_tipo varchar(50)
 )
 
 CREATE TABLE Atendentes (
@@ -134,6 +154,9 @@ GO
 ALTER TABLE Detalhes_Apolices ADD FOREIGN KEY (apolice_id) REFERENCES Apolices (apolice_id)
 GO
 
+ALTER TABLE Detalhes_Apolices ADD FOREIGN KEY (status_apolice_id) REFERENCES Status_Apolices (status_apolice_id)
+GO
+
 ALTER TABLE Pagamentos ADD FOREIGN KEY (apolice_id) REFERENCES Apolices (apolice_id)
 GO
 
@@ -143,15 +166,52 @@ GO
 ALTER TABLE Sinistros ADD FOREIGN KEY (apolice_id) REFERENCES Apolices (apolice_id)
 GO
 
+ALTER TABLE Sinistros ADD FOREIGN KEY (tipo_ocorrencia_id) REFERENCES Tipos_Ocorrencia (tipo_ocorrencia_id)
+GO
+
+ALTER TABLE Sinistros ADD FOREIGN KEY (status_sinistro_id) REFERENCES Status_Sinistros (status_sinistro_id)
+GO
+
 ALTER TABLE Atendimentos ADD FOREIGN KEY (cliente_id) REFERENCES Clientes (cliente_id)
 GO
 
 ALTER TABLE Atendimentos ADD FOREIGN KEY (atendente_id) REFERENCES Atendentes (atendente_id)
 GO
 
+ALTER TABLE Atendimentos ADD FOREIGN KEY (tipo_contato_id) REFERENCES Tipos_Contato_Atendimento (tipo_contato_id)
+GO
+
+ALTER TABLE Atendentes ADD FOREIGN KEY (cargo_id) REFERENCES Cargos (cargo_id)
+GO
+
 ALTER TABLE Clientes
-ADD CONSTRAINT chk_cpf_length CHECK (LEN(cpf) = 14);
+ADD CONSTRAINT chk_cpf_length CHECK (LEN(cpf) >= 11 AND LEN(cpf) <= 14);
+GO
 
 ALTER TABLE Celulares
 ADD CONSTRAINT chk_imei_length CHECK (LEN(imei) >= 15 and LEN(imei) <= 20);
+GO
 
+ALTER TABLE Celulares
+ADD CONSTRAINT chk_valor_celular CHECK (valor >= 0)
+GO
+
+ALTER TABLE Planos
+ADD CONSTRAINT chk_valor_mensal_plano CHECK (valor_mensal >= 0)
+GO
+
+ALTER TABLE Pagamentos
+ADD CONSTRAINT chk_valor_pago CHECK (valor_pago >= 0)
+GO
+
+ALTER TABLE Detalhes_Apolices
+ADD CONSTRAINT chk_datas_apolice CHECK (data_inicio <= data_fim)
+GO
+
+ALTER TABLE Clientes
+ADD CONSTRAINT chk_telefone_cliente_length CHECK (LEN(telefone) >= 10)
+GO
+
+ALTER TABLE Atendentes
+ADD CONSTRAINT chk_telefone_atendente_length CHECK (LEN(telefone_atendente) >= 10)
+GO

@@ -1,33 +1,43 @@
--- Inserir clientes
-INSERT INTO [Clientes] (nome, cpf, email, telefone, data_cadastro)
-VALUES
-('João Silva', '12345678900', 'joao.silva@email.com', '11999990000', '2025/01/05'),
+-- Tabelas de domínio
+INSERT INTO Status_Apolices (nome_status) VALUES ('ATIVA'), ('CANCELADA'), ('EXPIRADA');
+INSERT INTO Status_Pagamentos (nome_status) VALUES ('Pago'), ('Pendente'), ('Cancelado');
+INSERT INTO Status_Sinistros (nome_status) VALUES ('Aberto'), ('Fechado');
+INSERT INTO Tipos_Ocorrencia (nome_tipo) VALUES ('Roubo'), ('Furto'), ('Dano Acidental'), ('Perda');
+INSERT INTO Cargos (nome_cargo, descricao_cargo) VALUES 
+  ('Suporte', 'Atendimento ao cliente'),
+  ('Gerente', 'Gestão de equipe'),
+  ('Analista', 'Análise de processos'),
+  ('Supervisor', 'Supervisão de operações');
+INSERT INTO Tipos_Contato_Atendimento (nome_tipo) VALUES ('Telefone'), ('E-mail'), ('Chat');
+
+-- Clientes
+INSERT INTO Clientes (nome, cpf, email, telefone, data_cadastro) VALUES
+('João Silva', '123.456.789-01', 'joao.silva@email.com', '11999990000', '2025/01/05'),
 ('Maria Souza', '98765432100', 'maria.souza@email.com', '11999991111', '2025/01/06'),
-('Pedro Santos', '11122233344', 'pedro.santos@email.com', '11999992222', '2025/01/10'),
+('Pedro Santos', '111.222.333-44', 'pedro.santos@email.com', '11999992222', '2025/01/10'),
 ('Ana Oliveira', '55566677788', 'ana.oliveira@email.com', '11999993333', '2025/01/13'),
 ('Lucas Costa', '44455566677', 'lucas.costa@email.com', '11999994444', '2025/01/16'),
-('Mariana Lima', '88899900011', 'mariana.lima@email.com', '11999995555', '2025/01/17'),
+('Mariana Lima', '888.999.000-11', 'mariana.lima@email.com', '11999995555', '2025/01/17'),
 ('Carlos Mendes', '77788899900', 'carlos.mendes@email.com', '11999996666', '2025/01/20'),
 ('Paula Ramos', '33344455566', 'paula.ramos@email.com', '11999997777', '2025/01/20'),
 ('Felipe Alves', '22233344455', 'felipe.alves@email.com', '11999998888', '2025/01/29'),
 ('Juliana Pires', '66677788899', 'juliana.pires@email.com', '11999999999', '2025/02/01');
 
-INSERT INTO [Marcas] (nome)
-VALUES
-('Apple'),
-('Samsung'),
-('Motorola'),
-('Xiaomi'),
+
+INSERT INTO Marcas (nome) VALUES
+('Apple'), 
+('Samsung'), 
+('Motorola'), 
+('Xiaomi'), 
 ('LG'),
-('Nokia'),
-('Sony'),
-('Huawei'),
-('Asus'),
+('Nokia'), 
+('Sony'), 
+('Huawei'), 
+('Asus'), 
 ('Lenovo');
 
--- Inserir celulares
-INSERT INTO [Celulares] (cliente_id, marca_id, modelo, imei, valor)
-VALUES
+-- Celulares
+INSERT INTO Celulares (cliente_id, marca_id, modelo, imei, valor) VALUES
 (1, 1, 'iPhone 13', '111111111111111', 5000.00),
 (2, 2, 'Galaxy S21', '222222222222222', 4500.00),
 (3, 3, 'Moto G100', '333333333333333', 3000.00),
@@ -39,9 +49,8 @@ VALUES
 (9, 9, 'Zenfone 8', '999999999999999', 4000.00),
 (10, 10, 'Legion Phone', '101010101010101', 6000.00);
 
--- Inserir planos
-INSERT INTO [Planos] (nome_plano, descricao, valor_mensal)
-VALUES
+-- Planos
+INSERT INTO Planos (nome_plano, descricao, valor_mensal) VALUES
 ('Plano Básico', 'Cobertura básica contra roubo e furto.', 50.00),
 ('Plano Plus', 'Cobertura completa, incluindo danos acidentais.', 80.00),
 ('Plano Família', 'Cobertura para múltiplos dispositivos.', 100.00),
@@ -53,9 +62,8 @@ VALUES
 ('Plano Black', 'Cobertura total sem limites.', 250.00),
 ('Plano Personalizado', 'Cobertura flexível de acordo com suas necessidades.', 180.00);
 
--- Inserir coberturas
-INSERT INTO [Coberturas] (plano_id, descricao)
-VALUES
+-- Coberturas
+INSERT INTO Coberturas (plano_id, descricao) VALUES
 (1, 'Cobertura contra roubo'),
 (2, 'Cobertura completa'),
 (3, 'Cobertura para toda a família'),
@@ -67,9 +75,8 @@ VALUES
 (9, 'Cobertura Black'),
 (10, 'Cobertura flexível');
 
--- Inserir apólices
-INSERT INTO [Apolices] (cliente_id, celular_id, plano_id)
-VALUES
+-- Apolices
+INSERT INTO Apolices (cliente_id, celular_id, plano_id) VALUES
 (1, 1, 1),
 (2, 2, 2),
 (3, 3, 3),
@@ -81,89 +88,75 @@ VALUES
 (9, 9, 9),
 (10, 10, 10);
 
--- Inserir detalhes de apólices
-INSERT INTO [Detalhes_Apolices] (apolice_id, data_inicio, data_fim, status)
-VALUES
-(1, '2025/01/05', '2026/01/05', 'ATIVA'),
-(2, '2025/01/06', '2026/01/06', 'ATIVA'),
-(3, '2025/01/10', '2026/01/10', 'ATIVA'),
-(4, '2025/01/13', '2026/01/13', 'ATIVA'),
-(5, '2025/01/16', '2026/01/16', 'ATIVA'),
-(6, '2025/01/17', '2026/01/17', 'ATIVA'),
-(7, '2025/01/20', '2026/01/20', 'ATIVA'),
-(8, '2025/01/22', '2026/01/20', 'ATIVA'),
-(9, '2025/01/29', '2026/01/29', 'ATIVA'),
-(10, '2025/02/01', '2026/02/01', 'ATIVA');
+-- Detalhes_Apolices (status_apolice_id: 1=ATIVA)
+INSERT INTO Detalhes_Apolices (apolice_id, data_inicio, data_fim, status_apolice_id) VALUES
+(1, '2025/01/05', '2026/01/05', 1),
+(2, '2025/01/06', '2026/01/06', 1),
+(3, '2025/01/10', '2026/01/10', 1),
+(4, '2025/01/13', '2026/01/13', 1),
+(5, '2025/01/16', '2026/01/16', 1),
+(6, '2025/01/17', '2026/01/17', 1),
+(7, '2025/01/20', '2026/01/20', 1),
+(8, '2025/01/22', '2026/01/20', 1),
+(9, '2025/01/29', '2026/01/29', 1),
+(10, '2025/02/01', '2026/02/01', 1);
 
--- Inserir métodos de pagamento
-INSERT INTO [Metodo_Pagamento] (nome)
-VALUES
-('Cartão de Crédito'),
-('Boleto Bancário'),
-('Pix'),
-('Transferência'),
-('Débito Automático'),
-('PayPal'),
-('Dinheiro'),
-('Crédito Loja'),
-('Vale Compra'),
-('Crédito Celular');
+-- Metodo_Pagamento
+INSERT INTO Metodo_Pagamento (nome) VALUES
+('Cartão de Crédito'), ('Boleto Bancário'), ('Pix'), ('Transferência'), ('Débito Automático'),
+('PayPal'), ('Dinheiro'), ('Crédito Loja'), ('Vale Compra'), ('Crédito Celular');
 
--- Inserir pagamentos
-INSERT INTO [Pagamentos] (apolice_id, data_pagamento, valor_pago, status, metodo_pagamento_id)
-VALUES
-(1, '2025/01/10', 50.00, 'Pago', 1),
-(2, '2025/01/10', 80.00, 'Pago', 2),
-(3, '2025/01/12', 100.00, 'Pago', 3),
-(4, '2025/01/15', 150.00, 'Pago', 4),
-(5, '2025/01/20', 40.00, 'Pago', 5),
-(6, '2025/01/20', 200.00, 'Pago', 6),
-(7, '2025/01/22', 70.00, 'Pago', 7),
-(8, '2025/01/25', 120.00, 'Pago', 8),
-(9, '2025/02/02', 250.00, 'Pago', 9),
-(10, '2025/02/10', 180.00, 'Pago', 10);
+-- Pagamentos (status_pagamentos_id: 1=Pago)
+INSERT INTO Pagamentos (apolice_id, data_pagamento, valor_pago, status_pagamentos_id, metodo_pagamento_id) VALUES
+(1, '2025/01/10', 50.00, 1, 1),
+(2, '2025/01/10', 80.00, 1, 2),
+(3, '2025/01/12', 100.00, 1, 3),
+(4, '2025/01/15', 150.00, 1, 4),
+(5, '2025/01/20', 40.00, 1, 5),
+(6, '2025/01/20', 200.00, 1, 6),
+(7, '2025/01/22', 70.00, 1, 7),
+(8, '2025/01/25', 120.00, 1, 8),
+(9, '2025/02/02', 250.00, 1, 9),
+(10, '2025/02/10', 180.00, 1, 10);
 
--- Inserir sinistros
-INSERT INTO [Sinistros] (apolice_id, data_ocorrencia, tipo_ocorrencia, descricao, status)
-VALUES
-(1, '2025/02/01', 'Roubo', 'Roubo em transporte público', 'Aberto'),
-(2, '2025/02/01', 'Furto', 'Furto em shopping', 'Fechado'),
-(3, '2025/02/08', 'Dano Acidental', 'Queda do aparelho', 'Aberto'),
-(4, '2025/02/10', 'Roubo', 'Roubo em casa', 'Fechado'),
-(5, '2025/02/12', 'Perda', 'Perda durante viagem', 'Aberto'),
-(6, '2025/02/18', 'Furto', 'Furto em festa', 'Aberto'),
-(7, '2025/02/18', 'Roubo', 'Roubo em transporte público', 'Fechado'),
-(8, '2025/03/08', 'Dano Acidental', 'Dano na piscina', 'Aberto'),
-(9, '2025/3/12', 'Furto', 'Furto em evento', 'Fechado'),
-(10, '2025/03/19', 'Roubo', 'Roubo em trânsito', 'Aberto');
+-- Sinistros (tipo_ocorrencia_id: 1=Roubo, 2=Furto, 3=Dano Acidental, 4=Perda; status_sinistro_id: 1=Aberto, 2=Fechado)
+INSERT INTO Sinistros (apolice_id, data_ocorrencia, tipo_ocorrencia_id, descricao, status_sinistro_id) VALUES
+(1, '2025/02/01', 1, 'Roubo em transporte público', 1),
+(2, '2025/02/01', 2, 'Furto em shopping', 2),
+(3, '2025/02/08', 3, 'Queda do aparelho', 1),
+(4, '2025/02/10', 1, 'Roubo em casa', 2),
+(5, '2025/02/12', 4, 'Perda durante viagem', 1),
+(6, '2025/02/18', 2, 'Furto em festa', 1),
+(7, '2025/02/18', 1, 'Roubo em transporte público', 2),
+(8, '2025/03/08', 3, 'Dano na piscina', 1),
+(9, '2025/03/12', 2, 'Furto em evento', 2),
+(10, '2025/03/19', 1, 'Roubo em trânsito', 1);
 
--- Inserir atendentes
-INSERT INTO [Atendentes] (nome_atendente, email_atendente, telefone_atendente, cargo, data_admissao)
-VALUES
-('Lucas Atendente', 'lucas.atendente@email.com', '11999990001', 'Suporte', '2022/01/05'),
-('Mariana Atendente', 'mariana.atendente@email.com', '11999990002', 'Suporte', '2022/02/08'),
-('Felipe Atendente', 'felipe.atendente@email.com', '11999990003', 'Suporte', '2022/03/25'),
-('Paula Atendente', 'paula.atendente@email.com', '11999990004', 'Gerente', '2022/04/23'),
-('Carlos Atendente', 'carlos.atendente@email.com', '11999990005', 'Analista', '2022/05/01'),
-('Juliana Atendente', 'juliana.atendente@email.com', '11999990006', 'Supervisor', '2022/05/05'),
-('Pedro Atendente', 'pedro.atendente@email.com', '11999990007', 'Suporte', '2022/05/12'),
-('Ana Atendente', 'ana.atendente@email.com', '11999990008', 'Gerente', '2022/08/10'),
-('João Atendente', 'joao.atendente@email.com', '11999990009', 'Suporte', '2022/08/12'),
-('Rafael Atendente', 'rafael.atendente@email.com', '11999990010', 'Analista', '2022/10/01');
+-- Atendentes (cargo_id: 1=Suporte, 2=Gerente, 3=Analista, 4=Supervisor)
+INSERT INTO Atendentes (nome_atendente, email_atendente, telefone_atendente, cargo_id, data_admissao) VALUES
+('Lucas Atendente', 'lucas.atendente@email.com', '11999990001', 1, '2022/01/05'),
+('Mariana Atendente', 'mariana.atendente@email.com', '11999990002', 1, '2022/02/08'),
+('Felipe Atendente', 'felipe.atendente@email.com', '11999990003', 1, '2022/03/25'),
+('Paula Atendente', 'paula.atendente@email.com', '11999990004', 2, '2022/04/23'),
+('Carlos Atendente', 'carlos.atendente@email.com', '11999990005', 3, '2022/05/01'),
+('Juliana Atendente', 'juliana.atendente@email.com', '11999990006', 4, '2022/05/05'),
+('Pedro Atendente', 'pedro.atendente@email.com', '11999990007', 1, '2022/05/12'),
+('Ana Atendente', 'ana.atendente@email.com', '11999990008', 2, '2022/08/10'),
+('João Atendente', 'joao.atendente@email.com', '11999990009', 1, '2022/08/12'),
+('Rafael Atendente', 'rafael.atendente@email.com', '11999990010', 3, '2022/10/01');
 
--- Inserir atendimentos
-INSERT INTO [Atendimentos] (cliente_id, atendente_id, data_atendimento, tipo_contato, assunto, observacoes)
-VALUES
-(1, 1, '2025/01/15 10:30:50', 'Telefone', 'Dúvida sobre plano', 'Cliente com dúvidas sobre cobertura'),
-(2, 2, '2025/01/15 20:26:00', 'E-mail', 'Troca de aparelho', 'Solicitação de troca de celular'),
-(3, 3, '2025/01/28 11:55:00', 'Chat', 'Dúvida sobre pagamento', 'Cliente questionou valor da fatura'),
-(4, 4, '2025/02/05 09:00:00', 'Telefone', 'Cancelamento', 'Cliente deseja cancelar o plano'),
-(5, 5, '2025/02/15 15:08:30', 'E-mail', 'Atualização de dados', 'Cliente atualizou endereço'),
-(6, 6, '2025/02/22 18:40:00', 'Chat', 'Reembolso', 'Cliente solicitou reembolso'),
-(7, 7, '2025/03/08 22:00:23', 'Telefone', 'Sinistro', 'Cliente relatou sinistro'),
-(8, 8, '2025/03/12 20:50:00', 'E-mail', 'Novo plano', 'Cliente interessado em mudar de plano'),
-(9, 9, '2025/03/23 14:30:00', 'Chat', 'Dúvida sobre apólice', 'Cliente quer detalhes'),
-(10, 10, '2025/03/23 10:10:00', 'Telefone', 'Fidelização', 'Cliente elogiou atendimento');
+-- Atendimentos (tipo_contato_id: 1=Telefone, 2=E-mail, 3=Chat)
+INSERT INTO Atendimentos (cliente_id, atendente_id, data_atendimento, tipo_contato_id, assunto, observacoes) VALUES
+(1, 1, '2025/01/15 10:30:50', 1, 'Dúvida sobre plano', 'Cliente com dúvidas sobre cobertura'),
+(2, 2, '2025/01/15 20:26:00', 2, 'Troca de aparelho', 'Solicitação de troca de celular'),
+(3, 3, '2025/01/28 11:55:00', 3, 'Dúvida sobre pagamento', 'Cliente questionou valor da fatura'),
+(4, 4, '2025/02/05 09:00:00', 1, 'Cancelamento', 'Cliente deseja cancelar o plano'),
+(5, 5, '2025/02/15 15:08:30', 2, 'Atualização de dados', 'Cliente atualizou endereço'),
+(6, 6, '2025/02/22 18:40:00', 3, 'Reembolso', 'Cliente solicitou reembolso'),
+(7, 7, '2025/03/08 22:00:23', 1, 'Sinistro', 'Cliente relatou sinistro'),
+(8, 8, '2025/03/12 20:50:00', 2, 'Novo plano', 'Cliente interessado em mudar de plano'),
+(9, 9, '2025/03/23 14:30:00', 3, 'Dúvida sobre apólice', 'Cliente quer detalhes'),
+(10, 10, '2025/03/23 10:10:00', 1, 'Fidelização', 'Cliente elogiou atendimento');
 
 GO
 
