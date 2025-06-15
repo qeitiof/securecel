@@ -1,9 +1,9 @@
 CREATE TABLE Clientes (
   cliente_id int PRIMARY KEY IDENTITY(1, 1),
   nome varchar(100),
-  cpf varchar(11) UNIQUE,
+  cpf varchar(14) UNIQUE,
   email varchar(100),
-  telefone varchar(15),
+  telefone varchar(16),
   data_cadastro date
 )
 GO
@@ -27,7 +27,7 @@ GO
 CREATE TABLE Planos (
   plano_id int PRIMARY KEY IDENTITY(1, 1),
   nome_plano varchar(50),
-  descricao varchar(255),
+  descricao varchar(500),
   valor_mensal decimal(10,2)
 )
 GO
@@ -35,7 +35,7 @@ GO
 CREATE TABLE Coberturas (
   cobertura_id int PRIMARY KEY IDENTITY(1, 1),
   plano_id int,
-  descricao varchar(255),
+  descricao varchar(500),
 )
 GO
 
@@ -76,7 +76,7 @@ CREATE TABLE Sinistros (
   apolice_id int,
   data_ocorrencia date,
   tipo_ocorrencia varchar(30),
-  descricao varchar(255),
+  descricao varchar(500),
   status_sinistro varchar(20)
 )
 GO
@@ -86,19 +86,30 @@ CREATE TABLE Atendimentos (
   cliente_id int,
   atendente_id int,
   data_atendimento datetime,
-  tipo_contato varchar(20),
+  tipo_contato_id int,
   assunto varchar(100),
-  observacoes varchar(255),
+  observacoes varchar(500),
 )
 GO
+create table Tipos_Contato_Atendimento (
+  tipo_contato_id int PRIMARY KEY IDENTITY(1, 1),
+  nome_tipo varchar(50),
+  descricao_tipo varchar(500)
+)
 
 CREATE TABLE Atendentes (
   atendente_id int PRIMARY KEY IDENTITY(1, 1),
   nome_atendente varchar(100),
   email_atendente varchar(100) UNIQUE,
-  telefone_atendente varchar(15),
-  cargo varchar(50),
+  telefone_atendente varchar(16),
+  cargo_id int,
   data_admissao date
+)
+GO
+CREATE TABLE Cargos (
+  cargo_id int PRIMARY KEY IDENTITY(1, 1),
+  nome_cargo varchar(50),
+  descricao_cargo varchar(500)
 )
 GO
 
@@ -139,7 +150,7 @@ ALTER TABLE Atendimentos ADD FOREIGN KEY (atendente_id) REFERENCES Atendentes (a
 GO
 
 ALTER TABLE Clientes
-ADD CONSTRAINT chk_cpf_length CHECK (LEN(cpf) = 11);
+ADD CONSTRAINT chk_cpf_length CHECK (LEN(cpf) = 14);
 
 ALTER TABLE Celulares
 ADD CONSTRAINT chk_imei_length CHECK (LEN(imei) >= 15 and LEN(imei) <= 20);
