@@ -20,9 +20,9 @@ END;
 GO
 
 -- ================================================
--- 1. Quantidade de apólices ativas em fevereiro/2025
+-- 1. Total de Apólices Ativas em 15/02/2025
 -- ================================================
-SELECT COUNT(*) AS total_ativas
+SELECT COUNT(*) AS [Total de Apólices Ativas]
 FROM Detalhes_Apolices da
 JOIN Status_Apolices sa ON da.status_apolice_id = sa.status_apolice_id
 WHERE sa.nome_status = 'ATIVA'
@@ -30,72 +30,68 @@ WHERE sa.nome_status = 'ATIVA'
 GO
 
 -- ================================================
--- 2. Clientes com múltiplas apólices ativas e seus planos
+-- 2. Clientes que atrasaram pagamentos e valor total em atraso por cliente.
 -- ================================================
 
--- Antes de rodar esse script, dar esse insert
+-- Inserção de pagamentos com status diferente de 'Pago' (2 = Pendente, 3 = Cancelado)
+INSERT INTO Pagamentos (apolice_id, data_pagamento, valor_pago, status_pagamentos_id, metodo_pagamento_id) VALUES
+(1, '2025-03-01', 50.00, 2, 1), -- pendente
+(2, '2025-03-05', 80.00, 2, 2), -- pendente
+(3, '2025-03-10', 100.00, 3, 3); -- cancelado
 
-INSERT INTO Apolices (cliente_id, celular_id, plano_id) VALUES (1, 2, 2);
-INSERT INTO Detalhes_Apolices (apolice_id, data_inicio, data_fim, status_apolice_id)
-VALUES (11, '2025-01-20', '2026-01-20', 1);
-
-
+WITH PagamentosAtrasados AS (
+  SELECT 
+    p.apolice_id,
+    p.valor_pago,
+    p.status_pagamentos_id
+  FROM Pagamentos p
+  JOIN Status_Pagamentos sp ON p.status_pagamentos_id = sp.status_pagamento_id
+  WHERE sp.nome_status <> 'Pago'
+)
 SELECT 
-  c.nome AS cliente,
-  COUNT(DISTINCT a.apolice_id) AS total_apolices,
-  STUFF((
-    SELECT DISTINCT ', ' + p2.nome_plano
-    FROM Apolices a2
-    JOIN Planos p2 ON a2.plano_id = p2.plano_id
-    JOIN Detalhes_Apolices da2 ON a2.apolice_id = da2.apolice_id
-    JOIN Status_Apolices sa2 ON da2.status_apolice_id = sa2.status_apolice_id
-    WHERE a2.cliente_id = c.cliente_id
-      AND sa2.nome_status = 'ATIVA'
-    FOR XML PATH(''), TYPE
-  ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS planos
+  c.nome AS [Nome do Cliente],
+  COUNT(pa.apolice_id) AS [Qtde de Pagamentos Atrasados],
+  FORMAT(SUM(pa.valor_pago), 'C', 'pt-BR') AS [Valor Total em Atraso]
 FROM Clientes c
 JOIN Apolices a ON c.cliente_id = a.cliente_id
-JOIN Detalhes_Apolices da ON a.apolice_id = da.apolice_id
-JOIN Status_Apolices sa ON da.status_apolice_id = sa.status_apolice_id
-WHERE sa.nome_status = 'ATIVA'
-GROUP BY c.nome, c.cliente_id
-HAVING COUNT(DISTINCT a.apolice_id) > 1
-ORDER BY total_apolices DESC;
-GO
+JOIN PagamentosAtrasados pa ON a.apolice_id = pa.apolice_id
+GROUP BY c.nome
+ORDER BY [Valor Total em Atraso] DESC;
+
 
 -- ================================================
--- 3. Sinistros em fevereiro/2025 e tipo mais comum
+-- 3. Sinistros em Fevereiro/2025 por Tipo
 -- ================================================
 SELECT 
-  COUNT(*) AS total_sinistros,
-  toco.nome_tipo AS tipo_ocorrencia
+  toco.nome_tipo AS [Tipo de Ocorrência],
+  COUNT(*) AS [Total de Sinistros]
 FROM Sinistros s
 JOIN Tipos_Ocorrencia toco ON s.tipo_ocorrencia_id = toco.tipo_ocorrencia_id
 WHERE MONTH(s.data_ocorrencia) = 2
   AND YEAR(s.data_ocorrencia) = 2025
 GROUP BY toco.nome_tipo
-ORDER BY COUNT(*) DESC;
+ORDER BY [Total de Sinistros] DESC;
 GO
 
 -- ================================================
--- 4. Planos mais contratados e média de valor pago
+-- 4. Planos Mais Contratados e Média de Valor Pago
 -- ================================================
 SELECT 
-  p.nome_plano,
-  COUNT(DISTINCT a.apolice_id) AS total_contratos,
-  AVG(p.valor_mensal) AS valor_medio_mensal,
-  SUM(pg.valor_pago) AS receita_total
+  p.nome_plano AS [Plano],
+  COUNT(DISTINCT a.apolice_id) AS [Total de Contratos],
+  FORMAT(AVG(p.valor_mensal), 'C', 'pt-BR') AS [Valor Médio Mensal],
+  FORMAT(SUM(pg.valor_pago), 'C', 'pt-BR') AS [Receita Total]
 FROM Apolices a
 JOIN Planos p ON a.plano_id = p.plano_id
 JOIN Pagamentos pg ON a.apolice_id = pg.apolice_id
 JOIN Status_Pagamentos sp ON pg.status_pagamentos_id = sp.status_pagamento_id
 WHERE sp.nome_status = 'Pago'
 GROUP BY p.nome_plano
-ORDER BY total_contratos DESC;
+ORDER BY [Total de Contratos] DESC;
 GO
 
 -- ================================================
--- 5. Receita por plano em jan, fev e mar/2025 (últimos 3 meses conhecidos)
+-- 5. Receita Mensal por Plano (Jan-Mar/2025)
 -- ================================================
 WITH PagamentosRecentes AS (
   SELECT 
@@ -112,9 +108,9 @@ WITH PagamentosRecentes AS (
     AND p.data_pagamento BETWEEN '2025-01-01' AND '2025-03-31'
 )
 SELECT 
-  pl.nome_plano,
-  pr.mes,
-  SUM(pr.valor_pago) AS receita_total_mes
+  pl.nome_plano AS [Plano],
+  pr.mes AS [Mês],
+  FORMAT(SUM(pr.valor_pago), 'C', 'pt-BR') AS [Receita Total]
 FROM PagamentosRecentes pr
 JOIN Planos pl ON pr.plano_id = pl.plano_id
 GROUP BY pl.nome_plano, pr.mes
@@ -122,15 +118,15 @@ ORDER BY pl.nome_plano, pr.mes;
 GO
 
 -- ================================================
--- 6. Duração das apólices por cliente e plano
+-- 6. Duração das Apólices por Cliente e Plano
 -- ================================================
 SELECT 
-  a.apolice_id,
-  c.nome AS cliente,
-  p.nome_plano,
-  dbo.fn_DuracaoApolice(a.apolice_id) AS dias_de_cobertura
+  a.apolice_id AS [ID Apólice],
+  c.nome AS [Nome do Cliente],
+  p.nome_plano AS [Plano Contratado],
+  dbo.fn_DuracaoApolice(a.apolice_id) AS [Duração em Dias]
 FROM Apolices a
 JOIN Clientes c ON a.cliente_id = c.cliente_id
 JOIN Planos p ON a.plano_id = p.plano_id
-ORDER BY dias_de_cobertura DESC;
+ORDER BY [Duração em Dias] DESC;
 GO
