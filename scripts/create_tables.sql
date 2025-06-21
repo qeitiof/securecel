@@ -8,6 +8,7 @@ CREATE TABLE Clientes (
 )
 GO
 
+
 CREATE TABLE Celulares (
   celular_id int PRIMARY KEY IDENTITY(1, 1),
   cliente_id int,
@@ -24,6 +25,7 @@ CREATE TABLE Marcas (
 )
 GO
 
+
 CREATE TABLE Planos (
   plano_id int PRIMARY KEY IDENTITY(1, 1),
   nome_plano varchar(50),
@@ -31,6 +33,7 @@ CREATE TABLE Planos (
   valor_mensal decimal(10,2)
 )
 GO
+
 
 CREATE TABLE Coberturas (
   cobertura_id int PRIMARY KEY IDENTITY(1, 1),
@@ -47,6 +50,7 @@ CREATE TABLE Apolices (
 )
 GO
 
+
 CREATE TABLE Detalhes_Apolices (
   apolice_id int,
   data_inicio date,
@@ -54,11 +58,14 @@ CREATE TABLE Detalhes_Apolices (
   status_apolice_id int
 )
 GO
+
+
 CREATE TABLE Status_Apolices (
   status_apolice_id int PRIMARY KEY IDENTITY(1, 1),
   nome_status varchar(50)
 )
 GO
+
 
 CREATE TABLE Pagamentos (
   pagamento_id int PRIMARY KEY IDENTITY(1, 1),
@@ -76,6 +83,7 @@ CREATE TABLE Status_Pagamentos (
 )
 GO
 
+
 CREATE TABLE Metodo_Pagamento (
   metodo_pagamento_id int PRIMARY KEY IDENTITY(1, 1),
   nome varchar(50)
@@ -91,16 +99,21 @@ CREATE TABLE Sinistros (
   status_sinistro_id int
 )
 GO
+
+
 CREATE TABLE Tipos_Ocorrencia (
   tipo_ocorrencia_id int PRIMARY KEY IDENTITY(1, 1),
   nome_tipo varchar(50)
 )
 GO
+
+
 CREATE TABLE Status_Sinistros (
   status_sinistro_id int PRIMARY KEY IDENTITY(1, 1),
   nome_status varchar(50)
 )
 GO
+
 
 CREATE TABLE Atendimentos (
   atendimento_id int PRIMARY KEY IDENTITY(1, 1),
@@ -112,10 +125,12 @@ CREATE TABLE Atendimentos (
   observacoes varchar(500)
 )
 GO
+
 create table Tipos_Contato_Atendimento (
   tipo_contato_id int PRIMARY KEY IDENTITY(1, 1),
   nome_tipo varchar(50)
 )
+GO
 
 CREATE TABLE Atendentes (
   atendente_id int PRIMARY KEY IDENTITY(1, 1),
@@ -126,6 +141,7 @@ CREATE TABLE Atendentes (
   data_admissao date
 )
 GO
+
 CREATE TABLE Cargos (
   cargo_id int PRIMARY KEY IDENTITY(1, 1),
   nome_cargo varchar(50),
@@ -193,15 +209,15 @@ ADD CONSTRAINT chk_imei_length CHECK (LEN(imei) >= 15 and LEN(imei) <= 20);
 GO
 
 ALTER TABLE Celulares
-ADD CONSTRAINT chk_valor_celular CHECK (valor >= 0)
+ADD CONSTRAINT chk_valor_celular CHECK (valor >= 1)
 GO
 
 ALTER TABLE Planos
-ADD CONSTRAINT chk_valor_mensal_plano CHECK (valor_mensal >= 0)
+ADD CONSTRAINT chk_valor_mensal_plano CHECK (valor_mensal >= 1)
 GO
 
 ALTER TABLE Pagamentos
-ADD CONSTRAINT chk_valor_pago CHECK (valor_pago >= 0)
+ADD CONSTRAINT chk_valor_pago CHECK (valor_pago >= 1)
 GO
 
 ALTER TABLE Detalhes_Apolices
