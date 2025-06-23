@@ -1,13 +1,11 @@
 -- indices para a tabela Clientes
 CREATE NONCLUSTERED INDEX idx_clientes_nome ON Clientes(nome);
-CREATE NONCLUSTERED INDEX idx_clientes_cpf ON Clientes(cpf);
 CREATE NONCLUSTERED INDEX idx_clientes_email ON Clientes(email);
 CREATE NONCLUSTERED INDEX idx_clientes_telefone ON Clientes(telefone);
 GO
 -- indices para a tabela Celulares
 CREATE NONCLUSTERED INDEX idx_celulares_cliente_id ON Celulares(cliente_id);
 CREATE NONCLUSTERED INDEX idx_celulares_marca_id ON Celulares(marca_id);
-CREATE NONCLUSTERED INDEX idx_celulares_imei ON Celulares(imei);
 GO
 
 -- indices para a tabela Marcas
@@ -68,7 +66,7 @@ GO
 -- indices para a tabela Atendimentos  
 CREATE NONCLUSTERED INDEX idx_atendimentos_cliente_id ON Atendimentos(cliente_id);
 CREATE NONCLUSTERED INDEX idx_atendimentos_atendente_id ON Atendimentos(atendente_id);
-CREATE NONCLUSTERED INDEX idx_atendimentos_tipo_contato_id ON Atendimentos(tipo _contato_id);
+CREATE NONCLUSTERED INDEX idx_atendimentos_tipo_contato_id ON Atendimentos(tipo_contato_id);
 GO  
 
 -- indices para a tabela Tipos_Contato
@@ -77,7 +75,6 @@ GO
 
 -- indices para a tabela Atendentes
 CREATE NONCLUSTERED INDEX idx_atendentes_nome_atendente ON Atendentes(nome_atendente);
-CREATE NONCLUSTERED INDEX idx_atendentes_email_atendente ON Atendentes(email_at tendente);
 CREATE NONCLUSTERED INDEX idx_atendentes_telefone_atendente ON Atendentes(telefone_atendente);
 GO  
 
