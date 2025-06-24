@@ -12,3 +12,8 @@ Foram criados e testados os seguintes scripts:
 
 - Scripts testados no SGBD: **SQL Server 2022**
 - Execução sem erros.
+
+## Diagrama Físico do Banco de Dados
+
+![Diagrama Físico](./modelo_fisico/fisico.png)
+Inserindo imagem do diagrama físico no README
