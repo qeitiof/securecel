@@ -24,11 +24,9 @@ GO
 -- ================================================
 SELECT COUNT(*) AS [Total de Apólices Ativas]
 FROM Detalhes_Apolices da
-JOIN Status_Apolices sa ON da.status_apolice_id = sa.status_apolice_id
-WHERE sa.nome_status = 'ATIVA'
+WHERE da.status = 'ATIVA'
   AND '2025-02-15' BETWEEN da.data_inicio AND da.data_fim;
 GO
-
 -- ================================================
 -- 2. Clientes que atrasaram pagamentos e valor total em atraso por cliente.
 -- ================================================
@@ -101,9 +99,8 @@ WITH PagamentosRecentes AS (
   FROM Pagamentos p
   JOIN Apolices a ON p.apolice_id = a.apolice_id
   JOIN Detalhes_Apolices da ON a.apolice_id = da.apolice_id
-  JOIN Status_Apolices sa ON da.status_apolice_id = sa.status_apolice_id
   JOIN Status_Pagamentos sp ON p.status_pagamentos_id = sp.status_pagamento_id
-  WHERE sa.nome_status = 'ATIVA'
+  WHERE da.status = 'ATIVA'
     AND sp.nome_status = 'Pago'
     AND p.data_pagamento BETWEEN '2025-01-01' AND '2025-03-31'
 )
